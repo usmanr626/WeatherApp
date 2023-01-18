@@ -1,21 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   SafeAreaView,
   TouchableOpacity,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import styles from './styles';
 import images from '../../assets/images/images';
-
+import {SearchBar} from '../../Components';
 const WeatherScreen = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       {/* Search Bar */}
       <View style={styles.searchBarContainer}>
         <TouchableOpacity onPress={() => console.warn('SEARCH')}>
-          <Text>SEARCH</Text>
+          <SearchBar
+            placeholder="Search"
+            onChangeText={setSearchTerm}
+            value={searchTerm}
+            onPress={() => setSearchTerm('')}
+          />
         </TouchableOpacity>
       </View>
       {/* Current Temp */}
