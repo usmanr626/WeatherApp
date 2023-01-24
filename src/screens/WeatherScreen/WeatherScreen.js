@@ -13,7 +13,8 @@ import images from '../../assets/images/images';
 import {SearchBar} from '../../Components';
 import Geolocation from '@react-native-community/geolocation';
 const WeatherScreen = () => {
-  const [location, setLocation] = useState({});
+  const currentTime = new Date();
+  const [dayTime, setDayTime] = useState(Boolean);
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState({});
   const [sunrise, setSunrise] = useState('');
@@ -21,9 +22,22 @@ const WeatherScreen = () => {
   const [sunset, setSunset] = useState('');
   const [updatedSunset, setUpdatedSunset] = useState('');
   const [show, setShow] = useState(false);
+
+  console.log('Current Time: ', currentTime);
+
+  useEffect(() => {
+    if (currentTime.getHours() >= 7 && currentTime.getHours() < 19) {
+      console.log('DAY');
+      setDayTime(true);
+    } else {
+      console.log('Night');
+      setDayTime(false);
+    }
+  }, []);
+
   const getCurrentWeather = async () => {
     console.log('Run');
-    console.log('lat:', {location});
+
     var requestOptions = {
       method: 'GET',
       redirect: 'follow',
@@ -48,55 +62,10 @@ const WeatherScreen = () => {
   };
 
   const calculateSunTime = () => {
-    // console.log('sun:', sunset);
-    // var sunRiseDate = new Date(sunrise * 1000);
-    // // Hours part from the timestamp
-    // var sunRiseHours = sunRiseDate.getHours();
-    // // Minutes part from the timestamp
-    // var sunRiseMinutes = sunRiseDate.getMinutes();
-    // // Will display time in 10:30 format
-    // var SunriseFormattedTime = sunRiseHours % 12 || 12;
-    // SunriseFormattedTime += ':' + sunRiseMinutes.substring(-2);
-    // // get the AM/PM
-    // var ampm = sunRiseHours >= 12 ? ' pm' : ' am';
-    // console.warn(SunriseFormattedTime + ampm);
-    // // return time in 6:45pm format
-    // setUpdatedSunrise(SunriseFormattedTime + ampm);
-    // var sunsetDate = new Date(sunset * 1000);
-    // // Hours part from the timestamp
-    // var sunsetHours = sunsetDate.getHours();
-    // // Minutes part from the timestamp
-    // var sunsetMinutes = '0' + sunsetDate.getMinutes();
-    // // Will display time in 10:30 format
-    // var SunsetFormattedTime = sunsetHours % 12 || 12;
-    // SunsetFormattedTime += ':' + sunsetMinutes.substring(-2);
-    // // get the AM/PM
-    // var ampm = sunsetHours >= 12 ? ' pm' : ' am';
-    // console.warn(SunsetFormattedTime + ampm);
-    // // return time in 6:45pm format
-    // setUpdatedSunset(SunsetFormattedTime + ampm);
+    //TODO: calculate Sunrise and Sunset Time
   };
 
-  const getCurrentLocation = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        setLocation({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-        console.log('lat:', position.coords.latitude);
-        console.log('long:', position.coords.longitude);
-      },
-      error => console.log(error),
-      {
-        enableHighAccuracy: true,
-        timeout: 2000,
-        maximumAge: 1000,
-      },
-    );
-  };
   useEffect(() => {
-    getCurrentLocation();
     getCurrentWeather();
   }, []);
 
@@ -119,7 +88,7 @@ const WeatherScreen = () => {
 
           <View style={styles.backgroundImageContainer}>
             <ImageBackground
-              source={images.day4}
+              source={dayTime ? images.day1 : images.night2}
               style={styles.backgroundImageStyle}
               resizeMode="contain">
               {/* Temperature and Details */}
