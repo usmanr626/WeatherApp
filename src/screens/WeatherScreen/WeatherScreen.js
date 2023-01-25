@@ -22,7 +22,8 @@ const WeatherScreen = () => {
   const [sunset, setSunset] = useState('');
   const [updatedSunset, setUpdatedSunset] = useState('');
   const [show, setShow] = useState(false);
-
+  const [currentLat, setCurrentLat] = useState('');
+  const [currentLon, setCurrentLon] = useState('');
   console.log('Current Time: ', currentTime);
 
   useEffect(() => {
@@ -35,6 +36,19 @@ const WeatherScreen = () => {
     }
   }, []);
 
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(position => {
+      console.log('Current Position Here: ', position),
+        console.log('Current Latitude Here: ', position.coords.latitude),
+        setCurrentLat(position.coords.latitude);
+      console.log('Current Longitude Here: ', position.coords.longitude);
+      setCurrentLon(position.coords.longitude);
+    });
+    error => {
+      console.log('Error getting loaction: ', error);
+    };
+  };
+
   const getCurrentWeather = async () => {
     console.log('Run');
 
@@ -45,7 +59,7 @@ const WeatherScreen = () => {
 
     try {
       const response = await fetch(
-        'https://api.openweathermap.org/data/2.5/weather?lat=24.86&lon=67.00&appid=f4cba768c7d4c28c5470107db6d0cfbd',
+        `https://api.openweathermap.org/data/2.5/weather?lat=${24}.86&lon=${67}.00&appid=f4cba768c7d4c28c5470107db6d0cfbd`,
         requestOptions,
       );
       let result = await response.json();
@@ -66,9 +80,22 @@ const WeatherScreen = () => {
   };
 
   useEffect(() => {
-    getCurrentWeather();
+    getCurrentLocation();
   }, []);
 
+  useEffect(() => {
+    getCurrentWeather();
+    console.log('LATT:', currentLat);
+    console.log('LON:', currentLon);
+  }, [currentLat, currentLon]);
+
+  const timeStampToTime = value => {
+    var date = new Date(value * 1000);
+    var hours = date.getHours();
+    var minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+
+    return hours + ':' + minutes.substring(-2);
+  };
   return (
     <SafeAreaView style={styles.mainContainer}>
       {show ? (
@@ -88,15 +115,15 @@ const WeatherScreen = () => {
 
           <View style={styles.backgroundImageContainer}>
             <ImageBackground
-              source={dayTime ? images.day1 : images.night2}
+              source={dayTime ? images.day1 : images.night4}
               style={styles.backgroundImageStyle}
-              resizeMode="contain">
+              resizeMode="cover">
               {/* Temperature and Details */}
               <View style={styles.temperatureMainContainer}>
                 <Text style={styles.temperatureMainContainerText}>
                   {/* {data?.main?.temp} */}
                   {setShow
-                    ? (data?.main?.temp - 273.15).toFixed()
+                    ? `${(data?.main?.temp - 273.15).toFixed()}°C`
                     : 'Fetching Data'}
                 </Text>
               </View>
@@ -107,7 +134,7 @@ const WeatherScreen = () => {
                   {setShow
                     ? `Feels like:  ${(
                         data?.main?.feels_like - 273.15
-                      ).toFixed()}`
+                      ).toFixed()}°C`
                     : 'Fetching Data'}
                 </Text>
                 <Text style={styles.temperatureSecondaryContainerText}>
@@ -118,21 +145,18 @@ const WeatherScreen = () => {
                   {/* {data.weather[0].main} */}
                   {setShow ? data?.name : 'Fetching Data'}
                 </Text>
+                <Text style={styles.locationCountryText}>
+                  {setShow ? data?.sys?.country : 'Fetching Data'}
+                </Text>
               </View>
             </ImageBackground>
           </View>
 
           {/* Additinal Detailst */}
-          <View
-            style={{
-              marginHorizontal: 20,
-              backgroundColor: 'purple',
-              width: '90%',
-              height: '10%',
-            }}>
-            <Text>{setShow ? data?.sys?.country : 'Fetching Data'}</Text>
-            <Text>Sunrise: {sunrise}</Text>
-            <Text>Sunset: {sunset}</Text>
+          <View style={styles.additionalDetailsContainer}>
+            <Text>Sunrise: {timeStampToTime(sunrise)}</Text>
+            <View style={styles.partition}></View>
+            <Text>Sunset: {timeStampToTime(sunset)}</Text>
           </View>
         </>
       ) : (
