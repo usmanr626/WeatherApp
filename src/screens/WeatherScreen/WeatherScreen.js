@@ -154,9 +154,54 @@ const WeatherScreen = () => {
 
           {/* Additinal Detailst */}
           <View style={styles.additionalDetailsContainer}>
-            <Text>Sunrise: {timeStampToTime(sunrise)}</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>Sunrise Pic</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>{timeStampToTime(sunrise)}</Text>
+              </View>
+            </View>
+
             <View style={styles.partition}></View>
-            <Text>Sunset: {timeStampToTime(sunset)}</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>Sunset Pic</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text>{timeStampToTime(sunset)}</Text>
+              </View>
+            </View>
           </View>
         </>
       ) : (

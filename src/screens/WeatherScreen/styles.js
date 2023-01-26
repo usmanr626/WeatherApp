@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
 
   searchBarContainer: {
-    backgroundColor: '#9da0c2',
+    backgroundColor: '#8984c6',
     width: '100%',
     height: '8%',
     marginBottom: 10,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   partition: {
     width: 2,
-    height: '100%',
+    height: '80%',
     backgroundColor: '#abaed3',
   },
 });
