@@ -77,6 +77,12 @@ const styles = StyleSheet.create({
     height: '80%',
     backgroundColor: '#abaed3',
   },
+  sunTime: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+    letterSpacing: 3,
+  },
 });
 
 export default styles;

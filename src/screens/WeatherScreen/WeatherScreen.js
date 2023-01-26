@@ -12,6 +12,7 @@ import styles from './styles';
 import images from '../../assets/images/images';
 import {SearchBar} from '../../Components';
 import Geolocation from '@react-native-community/geolocation';
+import Feather from 'react-native-vector-icons/Feather';
 const WeatherScreen = () => {
   const currentTime = new Date();
   const [dayTime, setDayTime] = useState(Boolean);
@@ -107,7 +108,7 @@ const WeatherScreen = () => {
                 placeholder="Search"
                 onChangeText={setSearchTerm}
                 value={searchTerm}
-                onPress={() => console.log('Data : ', data)}
+                onPress={() => console.log('COCOCOC : ')}
               />
             </View>
           </View>
@@ -166,7 +167,7 @@ const WeatherScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text>Sunrise Pic</Text>
+                <Feather name="sunrise" size={60} />
               </View>
               <View
                 style={{
@@ -174,7 +175,7 @@ const WeatherScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text>{timeStampToTime(sunrise)}</Text>
+                <Text style={styles.sunTime}>{timeStampToTime(sunrise)}</Text>
               </View>
             </View>
 
@@ -191,7 +192,7 @@ const WeatherScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text>Sunset Pic</Text>
+                <Feather name="sunset" size={60} />
               </View>
               <View
                 style={{
@@ -199,7 +200,7 @@ const WeatherScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text>{timeStampToTime(sunset)}</Text>
+                <Text style={styles.sunTime}>{timeStampToTime(sunset)}</Text>
               </View>
             </View>
           </View>
