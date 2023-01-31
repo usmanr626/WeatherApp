@@ -13,6 +13,7 @@ import images from '../../assets/images/images';
 import {SearchBar} from '../../Components';
 import Geolocation from '@react-native-community/geolocation';
 import Feather from 'react-native-vector-icons/Feather';
+
 const WeatherScreen = () => {
   const currentTime = new Date();
   const [dayTime, setDayTime] = useState(Boolean);
@@ -25,34 +26,40 @@ const WeatherScreen = () => {
   const [show, setShow] = useState(false);
   const [currentLat, setCurrentLat] = useState('');
   const [currentLon, setCurrentLon] = useState('');
-  console.log('Current Time: ', currentTime);
+  const [searchTrue, setSearchTrue] = useState(false);
 
   useEffect(() => {
     if (currentTime.getHours() >= 7 && currentTime.getHours() < 19) {
-      console.log('DAY');
+      // console.log('DAY');
       setDayTime(true);
     } else {
-      console.log('Night');
+      // console.log('Night');
       setDayTime(false);
     }
+    getCurrentLocation();
   }, []);
 
   const getCurrentLocation = () => {
-    Geolocation.getCurrentPosition(position => {
-      console.log('Current Position Here: ', position),
+    if (!searchTrue) {
+      Geolocation.getCurrentPosition(position => {
+        // console.log('Current Position Here: ', position),
         console.log('Current Latitude Here: ', position.coords.latitude),
-        setCurrentLat(position.coords.latitude);
-      console.log('Current Longitude Here: ', position.coords.longitude);
-      setCurrentLon(position.coords.longitude);
-    });
-    error => {
-      console.log('Error getting loaction: ', error);
-    };
+          setCurrentLat(position.coords.latitude);
+        console.log('Current Longitude Here: ', position.coords.longitude);
+        setCurrentLon(position.coords.longitude);
+      });
+      error => {
+        console.log('Error getting loaction: ', error);
+      };
+    } else if (searchTrue) {
+      return;
+    }
   };
 
   const getCurrentWeather = async () => {
-    console.log('Run');
-
+    // console.log('Run');
+    console.log('LATT in get weather:', currentLat);
+    console.log('LON in get weather:', currentLon);
     var requestOptions = {
       method: 'GET',
       redirect: 'follow',
@@ -60,7 +67,7 @@ const WeatherScreen = () => {
 
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${24}.86&lon=${67}.00&appid=f4cba768c7d4c28c5470107db6d0cfbd`,
+        `https://api.openweathermap.org/data/2.5/weather?lat=${currentLat}.86&lon=${currentLon}.00&appid=f4cba768c7d4c28c5470107db6d0cfbd`,
         requestOptions,
       );
       let result = await response.json();
@@ -81,10 +88,7 @@ const WeatherScreen = () => {
   };
 
   useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  useEffect(() => {
+    console.log('Current Weather Called:', currentLat);
     getCurrentWeather();
     console.log('LATT:', currentLat);
     console.log('LON:', currentLon);
@@ -97,6 +101,34 @@ const WeatherScreen = () => {
 
     return hours + ':' + minutes.substring(-2);
   };
+
+  const getLocation = async () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+    };
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${searchTerm} &appid=f4cba768c7d4c28c5470107db6d0cfbd`,
+        requestOptions,
+      );
+      let result = await response.json();
+      console.log('Search Data: ', result);
+
+      setCurrentLat(result.coord.lat);
+      setCurrentLon(result.coord.lon);
+      console.log('Current Latitude Now is: ', result.coord.lat);
+      console.log('Current Longitude Now is: ', result.coord.lon);
+
+      if (result.cod === '404') {
+        Alert.alert('Error', result.message);
+      }
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       {show ? (
@@ -108,7 +140,7 @@ const WeatherScreen = () => {
                 placeholder="Search"
                 onChangeText={setSearchTerm}
                 value={searchTerm}
-                onPress={() => console.log('COCOCOC : ')}
+                onPress={() => getLocation()}
               />
             </View>
           </View>

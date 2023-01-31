@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const SearchBar = ({placeholder, onChangeText, value, onPress}) => {
   return (
@@ -17,7 +18,7 @@ const SearchBar = ({placeholder, onChangeText, value, onPress}) => {
         value={value}></TextInput>
       <View style={styles.searchBarButtonContainer}>
         <TouchableOpacity style={styles.searchBarButtonStyle} onPress={onPress}>
-          <Text style={styles.searchBarButtonTextStyle}>SEARCH</Text>
+          <AntDesign name="search1" size={23} />
         </TouchableOpacity>
       </View>
     </View>
@@ -43,8 +44,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 2,
     borderRadius: 10,
-    width: 70,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   searchBarButtonTextStyle: {
     color: 'white',
